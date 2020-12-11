@@ -1,5 +1,5 @@
 CXX ?= c++
-CXXFLAGS ?= -std=c++11 -Wall -Wextra -pedantic
+CXXFLAGS ?= -std=c++11 -Wall -Wextra -pedantic -O2
 PROJECT = passwords
 
 all: ${PROJECT}
