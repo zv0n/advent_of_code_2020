@@ -3,9 +3,10 @@
 #include <vector>
 
 int playMemoryGame( const std::vector<int> &input, int rounds ) {
-    std::unordered_map<int, int> memory{};
+    std::vector<int> memory{};
+    memory.resize(rounds);
     int round = 0;
-    for ( int i = 0; i < input.size() - 1; i++ ) {
+    for ( size_t i = 0; i < input.size() - 1; i++ ) {
         round++;
         memory[input[i]] = round;
         rounds--;
