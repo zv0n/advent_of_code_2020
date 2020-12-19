@@ -130,46 +130,39 @@ howManyMatch( const std::vector<std::string> &strings,
     return { ret, invalid };
 }
 
+bool matchesPart2(const std::string &input, size_t pos, int count42, int count31, const std::vector<Rule> &rules) {
+    if(count31 >= count42 && count31 != 0)
+        return false;
+    if(count31 == 0) {
+        for(auto &rule : rules[42].getStringRules()) {
+            if(!strncmp(input.c_str() + pos, rule.c_str(), rule.length())) {
+                if(pos + rule.length() == input.length())
+                    return false; // we need at least 1 31
+                if(matchesPart2(input, pos + rule.length(), count42 + 1, count31, rules))
+                    return true;
+            }
+        }
+    }
+    for(auto &rule : rules[31].getStringRules()) {
+        if(!strncmp(input.c_str() + pos, rule.c_str(), rule.length())) {
+            if(pos + rule.length() == input.length()) {
+                if((count31 + 1) < count42)
+                    return true;
+                return false;
+            }
+            if(matchesPart2(input, pos + rule.length(), count42, count31 + 1, rules))
+                return true;
+        }
+    }
+    return false;
+}
+
 int howManyMatch2( const std::vector<std::string> &strings,
                    const std::vector<Rule> &rules ) {
     int ret = 0;
     for ( std::string string : strings ) {
-        auto rules_0 = rules[0].getStringRules();
-        if ( rules_0.find( string ) != rules_0.end() ) {
+        if(matchesPart2(string, 0, 0, 0, rules))
             ret++;
-        } else {
-            int count42 = 0;
-            int count31 = 0;
-            bool found = false;
-            do {
-                found = false;
-                for ( auto &rule : rules[42].getStringRules() ) {
-                    if ( !strncmp( string.c_str(), rule.c_str(),
-                                   rule.length() ) ) {
-                        found = true;
-                        count42++;
-                        string = string.substr( rule.length() );
-                    }
-                }
-            } while ( found );
-            if ( count42 != 0 ) {
-                do {
-                    found = false;
-                    for ( auto &rule : rules[31].getStringRules() ) {
-                        if ( !strncmp( string.c_str(), rule.c_str(),
-                                       rule.length() ) ) {
-                            found = true;
-                            count31++;
-                            string = string.substr( rule.length() );
-                        }
-                    }
-                } while ( found );
-                if ( string.length() == 0 && count31 < count42 &&
-                     count31 > 0 ) {
-                    ret++;
-                }
-            }
-        }
     }
     return ret;
 }
