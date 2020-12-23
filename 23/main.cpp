@@ -59,15 +59,17 @@ class CupCircle {
     }
 
     void performStep() {
-        std::unordered_set<long> forbidden{};
-        Cup *move_start = _head->getNext();
-        forbidden.insert( move_start->getId() );
+        long forbidden[3];
 
-        Cup *move_end = move_start;
-        for ( long i = 0; i < 2; i++ ) {
-            move_end = move_end->getNext();
-            forbidden.insert( move_end->getId() );
-        }
+        Cup *move_start = _head->getNext();
+        forbidden[0] = move_start->getId();
+
+        Cup *move_end = move_start->getNext();
+        forbidden[1] = move_end->getId();
+
+        move_end = move_end->getNext();
+        forbidden[2] = move_end->getId();
+
         _head->setNext( move_end->getNext() );
 
         auto destination = _head->getId();
@@ -75,7 +77,7 @@ class CupCircle {
             destination -= 1;
             if ( destination < min )
                 destination = max;
-        } while ( forbidden.find( destination ) != forbidden.end() );
+        } while ( destination == forbidden[0] || destination == forbidden[1] || destination == forbidden[2] );
         Cup *destination_cup = &_cups[destination - 1];
 
         move_end->setNext( destination_cup->getNext() );
