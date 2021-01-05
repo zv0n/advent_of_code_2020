@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <tuple>
 #include <vector>
 
 std::vector<size_t> getNums( std::ifstream &file ) {
